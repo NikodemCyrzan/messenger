@@ -1,0 +1,31 @@
+.users-panel {
+    &__list-item {
+        padding: 10px 20px;
+        border-radius: 10px;
+        transition: background-color 0.2s ease-in-out;
+        user-select: none;
+
+        &.active {
+            background-color: #f1f1f1;
+        }
+
+        &:hover {
+            cursor: pointer;
+            background-color: #f1f1f1;
+        }
+
+        &__nickname {
+            font-weight: 500;
+            font-size: 1.1rem;
+        }
+        &__last-message {
+            font-size: 0.9rem;
+            color: #737373;
+
+            &.unreaded {
+                color: black;
+                font-weight: 500;
+            }
+        }
+    }
+}

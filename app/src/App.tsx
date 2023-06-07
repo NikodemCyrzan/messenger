@@ -10,18 +10,26 @@ function App() {
             <UsersPanel
                 users={[
                     {
-                        nickname: "Jan Kowalski",
-                        lastMessage: "Cześć!",
-                        unreaded: true,
+                        id: "0",
+                        nickname: "Kamil",
+                        lastMessage: {
+                            sender: "0",
+                            content: "Cześć",
+                            readed: false,
+                        },
                     },
                     {
-                        nickname: "Jan Kowalski",
-                        lastMessage: "Ty: Cześć!",
-                        unreaded: false,
+                        id: "1",
+                        nickname: "Kamil",
+                        lastMessage: {
+                            sender: "1",
+                            content: "Cześć",
+                            readed: true,
+                        },
                     },
                 ]}
-                selectedUser={selectedUser}
                 selectUser={selectUser}
+                selectedUser={selectedUser}
             />
         </>
     );

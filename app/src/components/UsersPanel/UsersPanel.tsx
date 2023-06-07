@@ -1,20 +1,18 @@
 import { useState } from "react";
 import "./UsersPanel.scss";
+import { UserType } from "../../utils/types";
+import User from "./User/User";
 
 interface UsersPanelProps {
-    users: {
-        nickname: string;
-        lastMessage: string;
-        unreaded: boolean;
-    }[];
-    selectedUser: number;
+    users: UserType[];
     selectUser: (index: number) => void;
+    selectedUser: number;
 }
 
 const UsersPanel: React.FC<UsersPanelProps> = ({
     users,
-    selectedUser,
     selectUser,
+    selectedUser,
 }) => {
     const [scrollPosition, setScrollPosition] = useState(0);
 
@@ -30,22 +28,11 @@ const UsersPanel: React.FC<UsersPanelProps> = ({
                 }>
                 {users.map((user, i) => {
                     return (
-                        <div
-                            key={i}
-                            className={`users-panel__list-item ${
-                                selectedUser === i ? "active" : ""
-                            }`}
-                            onClick={() => selectUser(i)}>
-                            <div className="users-panel__list-item__nickname">
-                                {user.nickname}
-                            </div>
-                            <div
-                                className={`users-panel__list-item__last-message ${
-                                    user.unreaded ? "unreaded" : ""
-                                }`}>
-                                {user.lastMessage}
-                            </div>
-                        </div>
+                        <User
+                            user={user}
+                            selected={i === selectedUser}
+                            select={() => selectUser(i)}
+                        />
                     );
                 })}
             </div>
