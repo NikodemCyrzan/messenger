@@ -11,11 +11,7 @@
 
         &:after {
             content: "";
-            background: linear-gradient(
-                0deg,
-                rgba(255, 189, 0, 1) 0%,
-                rgba(255, 56, 0, 1) 100%
-            );
+            background: linear-gradient(0deg, #ffae00 0%, #ff1e00 100%);
             position: absolute;
             bottom: 0;
             right: 20px;
