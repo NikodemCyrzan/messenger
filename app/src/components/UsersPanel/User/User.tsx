@@ -17,7 +17,7 @@ const User: React.FC<UserProps> = ({ user, selected, select }) => {
             </div>
             <div
                 className={`users-panel__list-item__last-message ${
-                    user.lastMessage.readed ? "" : "unreaded"
+                    user.readed ? "" : "unreaded"
                 }`}>
                 {user.lastMessage.content}
             </div>

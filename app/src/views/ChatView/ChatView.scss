@@ -1,0 +1,21 @@
+.chat-view {
+    &__container {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        overflow: hidden;
+        display: flex;
+    }
+
+    &__users-panel {
+        width: 350px;
+        border-right: 1px solid #e0e0e0;
+    }
+
+    &__chat {
+        position: relative;
+        width: calc(100% - 350px);
+    }
+}

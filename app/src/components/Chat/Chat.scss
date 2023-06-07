@@ -6,7 +6,8 @@
         padding: 20px;
         display: flex;
         flex-direction: column;
-        justify-content: flex-end;
+
+        overflow-y: scroll;
 
         &:after {
             content: "";
@@ -15,9 +16,9 @@
                 rgba(255, 189, 0, 1) 0%,
                 rgba(255, 56, 0, 1) 100%
             );
-            position: fixed;
+            position: absolute;
             bottom: 0;
-            right: 0;
+            right: 20px;
             left: 0;
             top: 0;
             mix-blend-mode: screen;
