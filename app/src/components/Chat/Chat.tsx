@@ -1,7 +1,7 @@
 import React from "react";
 import { MessageType } from "../../utils/types";
 import "./Chat.scss";
-import { UserId } from "../../utils/memory";
+import memory from "../../utils/memory";
 
 interface MessageProps {
     message: MessageType;
@@ -28,7 +28,9 @@ const Chat: React.FC<ChatProps> = ({ messages = [] }) => {
             {messages.map((message) => (
                 <Message
                     message={message}
-                    position={message.sender === UserId ? "right" : "left"}
+                    position={
+                        message.sender === memory.UserId ? "right" : "left"
+                    }
                 />
             ))}
         </div>

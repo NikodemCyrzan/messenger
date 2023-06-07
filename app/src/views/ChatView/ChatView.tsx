@@ -4,6 +4,7 @@ import Chat from "../../components/Chat/Chat";
 import { useEffect, useState } from "react";
 import { getMessages, getUsers } from "../../utils/api";
 import { MessageType, UserType } from "../../utils/types";
+import MessageInput from "../../components/MessageInput/MessageInput";
 
 interface ChatViewProps {}
 
@@ -39,6 +40,7 @@ const ChatView: React.FC<ChatViewProps> = () => {
             </div>
             <div className="chat-view__chat">
                 <Chat messages={messages} />
+                <MessageInput />
             </div>
         </div>
     );

@@ -1,6 +1,6 @@
 .chat {
     &__container {
-        height: 100%;
+        height: calc(100% - 50px);
         width: 100%;
         background-color: white;
         padding: 20px;

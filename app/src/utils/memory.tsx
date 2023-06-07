@@ -1,3 +1,11 @@
-const UserId: string = "0";
+class Memory {
+    UserId: string;
 
-export { UserId };
+    constructor() {
+        this.UserId = "0";
+    }
+}
+
+const memory = new Memory();
+
+export default memory;
