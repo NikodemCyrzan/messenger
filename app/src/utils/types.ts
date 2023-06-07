@@ -5,7 +5,7 @@ export type MessageType = {
 
 export type UserType = {
     id: string;
-    nickname: string;
+    username: string;
     lastMessage: MessageType;
     readed: boolean;
 };

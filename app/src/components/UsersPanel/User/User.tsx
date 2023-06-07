@@ -13,7 +13,7 @@ const User: React.FC<UserProps> = ({ user, selected, select }) => {
             className={`users-panel__list-item ${selected ? "active" : ""}`}
             onClick={select}>
             <div className="users-panel__list-item__nickname">
-                {user.nickname}
+                {user.username}
             </div>
             <div
                 className={`users-panel__list-item__last-message ${

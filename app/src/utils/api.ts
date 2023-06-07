@@ -8,7 +8,7 @@ export const getUsers: () => Promise<UserType[]> = async () => {
     return [
         {
             id: "1",
-            nickname: "John",
+            username: "John",
             lastMessage: {
                 sender: "1",
                 content: "Hello",
@@ -17,7 +17,7 @@ export const getUsers: () => Promise<UserType[]> = async () => {
         },
         {
             id: "2",
-            nickname: "Jane",
+            username: "Jane",
             lastMessage: {
                 sender: "2",
                 content: "Hi",
