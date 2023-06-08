@@ -140,14 +140,26 @@ websocketServer.addListener("GET_CONVERSATION", async (data, session) => {
 websocketServer.addListener("GET_USERS", async (_, session) => {
     const usersList = Object.values(users)
         .filter((u) => u.session !== session)
-        .map((u) => ({
-            id: u.id,
-            username: u.username,
-            lastMessage: MessagesDatabase.getMessages(u.id, session.uuid).at(
-                -1
-            ),
-            readed: true,
-        }));
+        .map((u) => {
+            let lastMessage;
+            if (MessagesDatabase.chatExists(u.id, session.uuid))
+                lastMessage = MessagesDatabase.getMessages(
+                    u.id,
+                    SessionStorage.getData(session.uuid).id
+                ).at(-1);
+            else
+                lastMessage = {
+                    sender: u.id,
+                    content: "",
+                };
+
+            return {
+                id: u.id,
+                username: u.username,
+                lastMessage,
+                readed: true,
+            };
+        });
 
     return { success: true, users: usersList };
 });

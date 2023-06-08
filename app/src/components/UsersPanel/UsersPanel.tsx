@@ -29,6 +29,7 @@ const UsersPanel: React.FC<UsersPanelProps> = ({
                 {users.map((user, i) => {
                     return (
                         <User
+                            key={i}
                             user={user}
                             selected={i === selectedUser}
                             select={() => selectUser(i)}

@@ -162,7 +162,7 @@ class WebsocketClient {
     static sendRequest(
         title: string,
         data: object,
-        callback: (data: object) => void
+        callback: (data: any) => void
     ) {
         try {
             if (WebsocketClient.connection) {

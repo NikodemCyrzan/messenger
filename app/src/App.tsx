@@ -8,15 +8,24 @@ function App() {
         WebsocketClient.start("ws://localhost", 20000);
 
         WebsocketClient.addOnReady(() => {
-            // console.log(localStorage);
+            const username = Math.random().toString(36).substring(7);
             WebsocketClient.sendRequest(
                 "REGISTER",
                 {
-                    username: "test",
+                    username: username,
                     password: "test",
                 },
-                (response) => {
-                    console.log(response);
+                () => {
+                    WebsocketClient.sendRequest(
+                        "LOGIN",
+                        {
+                            username: username,
+                            password: "test",
+                        },
+                        (response) => {
+                            console.log(response);
+                        }
+                    );
                 }
             );
         });

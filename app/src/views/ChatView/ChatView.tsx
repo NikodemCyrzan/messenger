@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { getMessages, getUsers } from "../../utils/api";
 import { MessageType, UserType } from "../../utils/types";
 import MessageInput from "../../components/MessageInput/MessageInput";
+import WebsocketClient from "../../utils/websocketClient";
 
 interface ChatViewProps {}
 
@@ -14,17 +15,30 @@ const ChatView: React.FC<ChatViewProps> = () => {
     const [messages, setMessages] = useState<MessageType[]>([]);
 
     useEffect(() => {
-        (async () => {
-            setUsers(await getUsers());
-        })();
+        WebsocketClient.addOnReady(() => {
+            WebsocketClient.sendRequest("GET_USERS", {}, (response) => {
+                const { success, users } = response;
+                if (!success) return;
+
+                setUsers(users);
+            });
+        });
     }, []);
 
     const handleSelectUser = (index: number) => {
         selectUser(index);
 
-        (async () => {
-            setMessages(await getMessages(users[index].id));
-        })();
+        WebsocketClient.sendRequest(
+            "GET_CONVERSATION",
+            { with: users[index].id },
+            (response) => {
+                const { success, messages } = response;
+                if (!success) return;
+
+                console.log(response);
+                setMessages(messages);
+            }
+        );
     };
 
     return (

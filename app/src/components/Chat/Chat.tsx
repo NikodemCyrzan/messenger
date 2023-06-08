@@ -25,8 +25,9 @@ interface ChatProps {
 const Chat: React.FC<ChatProps> = ({ messages = [] }) => {
     return (
         <div className="chat__container">
-            {messages.map((message) => (
+            {messages.map((message, i) => (
                 <Message
+                    key={i}
                     message={message}
                     position={
                         message.sender === memory.UserId ? "right" : "left"
