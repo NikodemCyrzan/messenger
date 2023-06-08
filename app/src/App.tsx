@@ -1,14 +1,26 @@
 import WebsocketClient from "./utils/websocketClient";
 import "./App.css";
 import ChatView from "./views/ChatView/ChatView";
+import { useEffect } from "react";
 
 function App() {
-    WebsocketClient.start("ws://localhost", 20000);
+    useEffect(() => {
+        WebsocketClient.start("ws://localhost", 20000);
 
-    WebsocketClient.sendRequest("REGISTER", { pass: "dupa janka" }, (data) => {
-        console.log(data);
-    });
-    console.log(localStorage);
+        WebsocketClient.addOnReady(() => {
+            // console.log(localStorage);
+            WebsocketClient.sendRequest(
+                "REGISTER",
+                {
+                    username: "test",
+                    password: "test",
+                },
+                (response) => {
+                    console.log(response);
+                }
+            );
+        });
+    }, []);
 
     return (
         <>

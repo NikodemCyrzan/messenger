@@ -68,7 +68,7 @@ websocketServer.addListener("REGISTER", async (data, session) => {
 
     const id = v4();
     users[id] = { username, password, session, id };
-    sessionStorage.setData(session.id, { username, id });
+    SessionStorage.setData(session.uuid, { username, id });
 
     return { success: true };
 });
@@ -76,7 +76,6 @@ websocketServer.addListener("REGISTER", async (data, session) => {
 // login
 websocketServer.addListener("LOGIN", async (data, session) => {
     const { username, password } = data;
-    console.log(users);
 
     if (!username || !password) return { success: false };
 
@@ -86,14 +85,14 @@ websocketServer.addListener("LOGIN", async (data, session) => {
     if (user.password !== password) return { success: false };
 
     user.session = session;
-    sessionStorage.setData(session.id, { username, id: user.id });
+    SessionStorage.setData(session.uuid, { username, id: user.id });
 
     return { success: true };
 });
 
 // logout
 websocketServer.addListener("LOGOUT", async (_, session) => {
-    sessionStorage.removeKey(session.id);
+    SessionStorage.removeKey(session.uuid);
 
     return { success: true };
 });
@@ -144,7 +143,9 @@ websocketServer.addListener("GET_USERS", async (_, session) => {
         .map((u) => ({
             id: u.id,
             username: u.username,
-            lastMessage: MessagesDatabase.getMessages(u.id, session.id).at(-1),
+            lastMessage: MessagesDatabase.getMessages(u.id, session.uuid).at(
+                -1
+            ),
             readed: true,
         }));
 

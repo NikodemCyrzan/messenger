@@ -208,6 +208,14 @@ class WebsocketClient {
     static prepareMessage(title: string, data: object): string {
         return JSON.stringify({ title: "MSG", listenerTitle: title, data });
     }
+
+    static readyListeners: (() => void)[] = [];
+    static addOnReady(callback: () => void) {
+        WebsocketClient.readyListeners.push(callback);
+    }
+    static emitReady() {
+        WebsocketClient.readyListeners.forEach((callback) => callback());
+    }
 }
 
 WebsocketClient.addListener("GET_SESSION_UUID", () => {
@@ -220,6 +228,11 @@ WebsocketClient.addListener("GET_SESSION_UUID", () => {
 
 WebsocketClient.addListener("NEW_SESSION_UUID", ({ uuid }) => {
     localStorage.setItem("session_uuid", uuid);
+});
+
+WebsocketClient.addListener("SESSION_READY", () => {
+    console.log("SESSION_READY");
+    WebsocketClient.emitReady();
 });
 
 export default WebsocketClient;

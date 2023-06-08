@@ -47,6 +47,7 @@ class WebsocketServer {
                         clearTimeout(session?.sessionCloseTimeout);
                         session.sessionCloseTimeout = null;
                     }
+                    this.sendMessage(socket, "SESSION_READY", {});
                     return;
                 }
 
@@ -56,6 +57,8 @@ class WebsocketServer {
                 this.sendMessage(socket, "NEW_SESSION_UUID", {
                     uuid: session.uuid,
                 });
+
+                this.sendMessage(socket, "SESSION_READY", {});
             });
 
             socket.on("message", (rawData) => {
