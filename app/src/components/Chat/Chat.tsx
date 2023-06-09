@@ -24,7 +24,12 @@ interface ChatProps {
 
 const Chat: React.FC<ChatProps> = ({ messages = [] }) => {
     return (
-        <div className="chat__container">
+        <div
+            className="chat__container"
+            ref={(el) => {
+                if (!el) return;
+                el.scrollTop = el.scrollHeight;
+            }}>
             {messages.map((message, i) => (
                 <Message
                     key={i}

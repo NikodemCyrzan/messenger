@@ -17,9 +17,9 @@ class MessagesDatabase {
 
     static addMessage(from, to, message) {
         let chat;
-        if (!MessagesDatabase.chatExists)
+        if (!MessagesDatabase.chatExists(from, to))
             chat = MessagesDatabase.createChat(from, to);
-        else chat = MessagesDatabase.database[from][to];
+        else chat = MessagesDatabase.getChat(from, to);
 
         chat.addMessage({
             sender: from,
@@ -50,6 +50,12 @@ class MessagesDatabase {
         );
     }
 
+    static getChat(from, to) {
+        if (!MessagesDatabase.chatExists(from, to)) return null;
+
+        return MessagesDatabase.database[from][to];
+    }
+
     static getMessages(from, to) {
         if (!MessagesDatabase.chatExists(from, to)) return [];
 
@@ -69,6 +75,19 @@ websocketServer.addListener("REGISTER", async (data, session) => {
     const id = v4();
     users[id] = { username, password, session, id };
     SessionStorage.setData(session.uuid, { username, id });
+
+    Object.values(users).forEach((u) => {
+        if (u.session !== session)
+            websocketServer.sendMessage(u.session.socket, "NEW_USER", {
+                id,
+                username,
+                lastMessage: {
+                    sender: id,
+                    content: "",
+                },
+                readed: true,
+            });
+    });
 
     return { success: true };
 });
@@ -103,20 +122,26 @@ websocketServer.addListener("SEND_MESSAGE", async (data, session) => {
 
     if (!message || !to) return { success: false };
 
-    const user = Object.values(users).find((u) => u.username === to);
+    const user = Object.values(users).find((u) => u.id === to);
     if (!user) return { success: false };
 
     const from = Object.values(users).find((u) => u.session === session);
     if (!from) return { success: false };
 
-    MessagesDatabase.addMessage(from.id, to.id, message);
+    MessagesDatabase.addMessage(from.id, to, message);
 
-    websocketServer.sendMessage(user.session.socket, "MESSAGE", {
-        from: from.id,
+    websocketServer.sendMessage(user.session.socket, "NEW_MESSAGE", {
+        user: from.id,
         message,
     });
 
-    return { success: true };
+    return {
+        success: true,
+        message: {
+            sender: from.id,
+            content: message,
+        },
+    };
 });
 
 // get conversation

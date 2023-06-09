@@ -1,3 +1,5 @@
+import { loadMemory } from "./memory";
+
 function uuidv4() {
     const uuid = new Array(36);
     for (let i = 0; i < 36; i++) {
@@ -210,7 +212,7 @@ class WebsocketClient {
     }
 
     static readyListeners: (() => void)[] = [];
-    static addOnReady(callback: () => void) {
+    static addOnReady(callback: () => void | any) {
         WebsocketClient.readyListeners.push(callback);
     }
     static emitReady() {
@@ -231,7 +233,7 @@ WebsocketClient.addListener("NEW_SESSION_UUID", ({ uuid }) => {
 });
 
 WebsocketClient.addListener("SESSION_READY", () => {
-    console.log("SESSION_READY");
+    loadMemory();
     WebsocketClient.emitReady();
 });
 

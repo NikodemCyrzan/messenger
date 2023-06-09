@@ -2,7 +2,6 @@ import "./ChatView.scss";
 import UsersPanel from "../../components/UsersPanel/UsersPanel";
 import Chat from "../../components/Chat/Chat";
 import { useEffect, useState } from "react";
-import { getMessages, getUsers } from "../../utils/api";
 import { MessageType, UserType } from "../../utils/types";
 import MessageInput from "../../components/MessageInput/MessageInput";
 import WebsocketClient from "../../utils/websocketClient";
@@ -14,7 +13,7 @@ const ChatView: React.FC<ChatViewProps> = () => {
     const [users, setUsers] = useState<UserType[]>([]);
     const [messages, setMessages] = useState<MessageType[]>([]);
 
-    useEffect(() => {
+    useEffect(function () {
         WebsocketClient.addOnReady(() => {
             WebsocketClient.sendRequest("GET_USERS", {}, (response) => {
                 const { success, users } = response;
@@ -22,6 +21,31 @@ const ChatView: React.FC<ChatViewProps> = () => {
 
                 setUsers(users);
             });
+        });
+
+        WebsocketClient.addListener("NEW_MESSAGE", function (data) {
+            const { message, user } = data;
+
+            setUsers((users) => {
+                if (user.id !== users[selectedUser].id) return [...users];
+
+                users[selectedUser].lastMessage.content = message.content;
+                return [...users];
+            });
+
+            setMessages((messages) => {
+                return [
+                    ...messages,
+                    {
+                        sender: user.id,
+                        content: message,
+                    },
+                ];
+            });
+        });
+
+        WebsocketClient.addListener("NEW_USER", (data) => {
+            setUsers((users) => [...users, data]);
         });
     }, []);
 
@@ -35,8 +59,20 @@ const ChatView: React.FC<ChatViewProps> = () => {
                 const { success, messages } = response;
                 if (!success) return;
 
-                console.log(response);
                 setMessages(messages);
+            }
+        );
+    };
+
+    const handleSendMessage = (message: string) => {
+        WebsocketClient.sendRequest(
+            "SEND_MESSAGE",
+            { to: users[selectedUser].id, message },
+            (response) => {
+                const { success, message } = response;
+                if (!success) return;
+
+                setMessages((messages) => [...messages, message]);
             }
         );
     };
@@ -54,7 +90,7 @@ const ChatView: React.FC<ChatViewProps> = () => {
             </div>
             <div className="chat-view__chat">
                 <Chat messages={messages} />
-                <MessageInput />
+                <MessageInput sendMessage={handleSendMessage} />
             </div>
         </div>
     );

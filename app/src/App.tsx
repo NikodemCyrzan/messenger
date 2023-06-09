@@ -1,6 +1,7 @@
 import WebsocketClient from "./utils/websocketClient";
 import "./App.css";
 import ChatView from "./views/ChatView/ChatView";
+import Memory from "./utils/memory";
 import { useEffect } from "react";
 
 function App() {
@@ -16,6 +17,7 @@ function App() {
                     password: "test",
                 },
                 () => {
+                    console.log(Memory.UserId);
                     WebsocketClient.sendRequest(
                         "LOGIN",
                         {
