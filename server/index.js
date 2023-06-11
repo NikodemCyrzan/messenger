@@ -96,6 +96,8 @@ websocketServer.addListener("REGISTER", async (data, session) => {
 websocketServer.addListener("LOGIN", async (data, session) => {
     const { username, password } = data;
 
+    console.log(username, password);
+
     if (!username || !password) return { success: false };
 
     const user = Object.values(users).find((u) => u.username === username);
