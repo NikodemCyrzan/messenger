@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import "./LoginView.scss";
 import WebsocketClient from "../../utils/websocketClient";
 
@@ -8,6 +9,7 @@ const LoginView: React.FC<LoginViewProps> = () => {
     const [username, setUsername] = useState<string>("");
     const [password, setPassword] = useState<string>("");
     const [error, setError] = useState<string>("");
+    const navigate = useNavigate();
 
     const handleLogin = () => {
         WebsocketClient.sendRequest(
@@ -17,8 +19,10 @@ const LoginView: React.FC<LoginViewProps> = () => {
                 password,
             },
             (response) => {
-                if (response.success) setError("");
-                else setError("Nieprawidłowa nazwa użytkownika lub hasło");
+                if (response.success) {
+                    setError("");
+                    navigate("/chat");
+                } else setError("Nieprawidłowa nazwa użytkownika lub hasło");
             }
         );
     };
@@ -46,9 +50,9 @@ const LoginView: React.FC<LoginViewProps> = () => {
                     />
                 </div>
                 <div className="login-view__error">{error ? error : ""}</div>
-                <a href="./register" className="login-view__register">
+                <Link to="/register" className="login-view__register">
                     Nie masz konta?
-                </a>
+                </Link>
                 <div className="login-view__input__container">
                     <button
                         className="login-view__button"

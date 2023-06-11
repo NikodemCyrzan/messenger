@@ -1,6 +1,7 @@
 import { useState } from "react";
 import "./RegisterView.scss";
 import WebsocketClient from "../../utils/websocketClient";
+import { useNavigate } from "react-router-dom";
 
 interface RegisterViewProps {}
 
@@ -9,6 +10,7 @@ const RegisterView: React.FC<RegisterViewProps> = () => {
     const [password, setPassword] = useState<string>("");
     const [password2, setPassword2] = useState<string>("");
     const [error, setError] = useState<string>("");
+    const navigate = useNavigate();
 
     const handleRegister = () => {
         if (username.length < 3) {
@@ -33,8 +35,10 @@ const RegisterView: React.FC<RegisterViewProps> = () => {
                 password,
             },
             (response) => {
-                if (response.success) setError("");
-                else setError("Konto o podanej nazwie już istnieje");
+                if (response.success) {
+                    setError("");
+                    navigate("/chat");
+                } else setError("Konto o podanej nazwie już istnieje");
             }
         );
     };
