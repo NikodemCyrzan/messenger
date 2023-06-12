@@ -4,9 +4,10 @@ class Memory {
     static UserId: string;
 }
 
-const loadMemory = () => {
+const loadMemory: (callback: () => void) => void = (callback) => {
     WebsocketClient.sendRequest("GET_ID", {}, (data: any) => {
         Memory.UserId = data.id;
+        callback();
     });
 };
 

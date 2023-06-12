@@ -233,8 +233,14 @@ WebsocketClient.addListener("NEW_SESSION_UUID", ({ uuid }) => {
 });
 
 WebsocketClient.addListener("SESSION_READY", () => {
-    loadMemory();
-    WebsocketClient.emitReady();
+    loadMemory(() => {
+        connectionReady = true;
+        WebsocketClient.emitReady();
+    });
 });
+
+let connectionReady = false;
+
+export { connectionReady };
 
 export default WebsocketClient;

@@ -4,8 +4,8 @@ import Chat from "../../components/Chat/Chat";
 import { useEffect, useState } from "react";
 import { MessageType, UserType } from "../../utils/types";
 import MessageInput from "../../components/MessageInput/MessageInput";
-import WebsocketClient from "../../utils/websocketClient";
-import Memory, { loadMemory } from "../../utils/memory";
+import WebsocketClient, { connectionReady } from "../../utils/websocketClient";
+import { loadMemory } from "../../utils/memory";
 
 interface ChatViewProps {}
 
@@ -14,18 +14,22 @@ const ChatView: React.FC<ChatViewProps> = () => {
     const [users, setUsers] = useState<UserType[]>([]);
     const [messages, setMessages] = useState<MessageType[]>([]);
 
-    useEffect(function () {
-        loadMemory();
-        setTimeout(() => {
-            console.log(Memory.UserId);
-        }, 1000);
-
-        WebsocketClient.sendRequest("GET_USERS", {}, (response) => {
+    useEffect(() => {
+        const handleGetUsers: (res: any) => void = (response) => {
             const { success, users } = response;
             if (!success) return;
 
             setUsers(users);
-        });
+        };
+
+        if (connectionReady)
+            loadMemory(() => {
+                WebsocketClient.sendRequest("GET_USERS", {}, handleGetUsers);
+            });
+        else
+            WebsocketClient.addOnReady(() => {
+                WebsocketClient.sendRequest("GET_USERS", {}, handleGetUsers);
+            });
 
         WebsocketClient.addListener("NEW_MESSAGE", function (data) {
             const { message, user } = data;
@@ -47,7 +51,6 @@ const ChatView: React.FC<ChatViewProps> = () => {
                 ];
             });
         });
-
         WebsocketClient.addListener("NEW_USER", (data) => {
             setUsers((users) => [...users, data]);
         });
